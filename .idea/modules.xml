@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imdbaverage.iml" filepath="$PROJECT_DIR$/.idea/modules/imdbaverage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imdbaverage-build.iml" filepath="$PROJECT_DIR$/.idea/modules/imdbaverage-build.iml" />
+    </modules>
+  </component>
+</project>
