@@ -1,4 +1,4 @@
-import java.util.concurrent.{TimeUnit, Executors}
+import java.util.concurrent.{ThreadFactory, ExecutorService, TimeUnit, Executors}
 import org.openqa.selenium
 import org.openqa.selenium.{WebElement, WebDriver, By}
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -6,14 +6,19 @@ import org.openqa.selenium.support.ui.{ExpectedConditions, ExpectedCondition, We
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 import scala.collection.JavaConversions._
+import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by Alex on 1/7/2016.
   */
 object IMDBAverageCalculator {
   def main (args: Array[String]) {
-    val actor = "John Malkovich"
-    implicit val executionContext = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(2))
-    val driver:WebDriver = new FirefoxDriver()
+    val startTime = System.currentTimeMillis()
+    val actor = "Tom Cruise"
+    val executorService:ExecutorService = Executors.newFixedThreadPool(3, new ThreadFactory {
+      override def newThread(r: Runnable): Thread = new FireFoxThread(r)
+    })
+    val executionContext = ExecutionContext.fromExecutor(executorService)
+    val driver:WebDriver = new FirefoxDriver
     def waitUntilVisibleByXpath(xpath:String, timeOutInSeconds:Int):Unit={
       new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)))
     }
@@ -37,6 +42,9 @@ object IMDBAverageCalculator {
         println("Total rating is " + totalRating)
         println("Average rating is: " + (totalRating / numberOfRatings))
         driver.quit();
+        executorService.shutdown()
+        val endTime = System.currentTimeMillis
+        println("Time taken: " + (endTime - startTime))
       }
     }
   }
